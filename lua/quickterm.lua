@@ -6,10 +6,10 @@ local DEFAULT_OPTIONS = {
 }
 
 local SPLIT = {
-    ["bottom"] = "horizontal botright",
-    ["top"] = "horizontal topleft",
-    ["left"] = "vertical topleft",
-    ["right"] = "vertical botright",
+    ["left"] = { "vertical topleft", vim.api.nvim_win_set_width },
+    ["right"] = { "vertical botright", vim.api.nvim_win_set_width },
+    ["top"] = { "horizontal topleft", vim.api.nvim_win_set_height },
+    ["bottom"] = { "horizontal botright", vim.api.nvim_win_set_height },
 }
 
 local OPTIONS = nil
@@ -34,38 +34,41 @@ function M.is_open()
     return false
 end
 
+local function open_window()
+    local split, set_size = unpack(SPLIT[OPTIONS.position])
+
+    vim.cmd('noautocmd ' .. split.. ' new')
+    set_size(0, OPTIONS.size)
+end
+
+local function open_term(buf)
+    open_window()
+
+    BUFFER = buf or vim.api.nvim_get_current_buf()
+
+    vim.api.nvim_create_autocmd('BufDelete', {
+        buffer = BUFFER,
+        callback = function()
+            BUFFER = nil
+        end
+    })
+
+    -- If we already had a buffer, show it, else create a new one.
+    if buf then
+        vim.api.nvim_win_set_buf(0, buf)
+    else
+        vim.fn.termopen({ vim.o.shell })
+    end
+end
+
 function M.open()
-    local did_open = false
-
-    if not BUFFER then
-        vim.cmd(SPLIT[OPTIONS.position] .. ' terminal')
-        if OPTIONS.position == 'bottom' or OPTIONS.position == 'top' then
-            vim.api.nvim_win_set_height(0, OPTIONS.size)
-        else
-            vim.api.nvim_win_set_width(0, OPTIONS.size)
-        end
-        BUFFER = vim.api.nvim_get_current_buf()
-        vim.api.nvim_create_autocmd('BufDelete', {
-            buffer = BUFFER,
-            callback = function()
-                BUFFER = nil
-            end
-        })
-        did_open = true
+    if M.is_open() then
+        return
     end
 
-    if not M.is_open() then
-        vim.cmd(SPLIT[OPTIONS.position] .. ' new')
-        if OPTIONS.position == 'bottom' or OPTIONS.position == 'top' then
-            vim.api.nvim_win_set_height(0, OPTIONS.size)
-        else
-            vim.api.nvim_win_set_width(0, OPTIONS.size)
-        end
-        vim.api.nvim_win_set_buf(0, BUFFER)
-        did_open = true
-    end
+    open_term(BUFFER)
 
-    if did_open and vim.fn.mode(0) ~= 't' then
+    if vim.fn.mode(0) ~= 't' then
         vim.cmd.startinsert()
     end
 end
