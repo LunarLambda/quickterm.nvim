@@ -2,7 +2,8 @@ local M = {}
 
 local DEFAULT_OPTIONS = {
     position = 'bottom',
-    size = 16
+    size = 16,
+    command = { vim.o.shell },
 }
 
 local SPLIT = {
@@ -60,7 +61,7 @@ local function open_term(buf)
     if buf then
         vim.api.nvim_win_set_buf(0, buf)
     else
-        vim.fn.termopen({ vim.o.shell })
+        vim.fn.termopen(OPTIONS.command)
     end
 end
 
