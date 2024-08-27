@@ -27,6 +27,20 @@ Quickterm is a tiny Neovim plugin that allows you to quickly toggle a reusable t
 }
 ```
 
+### Manual / init.lua
+
+You will need to place the plugin in your `'runtimepath'`.
+
+```lua
+local quickterm = require 'quickterm'
+
+quickterm.setup({
+    -- Same contents as `opts` above
+})
+
+vim.keymap.set({ 'n', 't' }, '<C-`>', quickterm.toggle, { desc = 'Toggle terminal buffer' })
+```
+
 ## License
 
-SPDX-License-Identifier: Apache-2.0 ([](LICENSE.txt))
+SPDX-License-Identifier: Apache-2.0 ([LICENSE.txt](LICENSE.txt))
