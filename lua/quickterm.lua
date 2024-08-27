@@ -2,7 +2,7 @@ local M = {}
 
 local DEFAULT_OPTIONS = {
     position = 'bottom',
-    size = 10
+    size = 16
 }
 
 local SPLIT = {
@@ -46,6 +46,9 @@ local function open_term(buf)
 
     BUFFER = buf or vim.api.nvim_get_current_buf()
 
+    -- We need to detect when our buffer handle is going to be invalidated
+    -- by the buffer going away. Unloaded buffers still have their IDs.
+    -- NOTE: TermClose plays poorly w/ Neovim's default handling.
     vim.api.nvim_create_autocmd('BufDelete', {
         buffer = BUFFER,
         callback = function()
