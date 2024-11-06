@@ -1,6 +1,6 @@
-# quickterm.nvim – Quick, reusable terminal buffer
+# quickterm.nvim – Quick, reusable terminal buffers
 
-Quickterm is a tiny Neovim plugin that allows you to quickly toggle a reusable terminal buffer.
+Quickterm is a small Neovim plugin that allows you to quickly manipulate reusable terminal buffers.
 
 ## Setup
 
