@@ -20,7 +20,11 @@ function M.create(name, opts)
       end
    })
 
-   vim.fn.termopen(opts.command)
+   vim.fn.termopen(opts.command, {
+      clear_env = opts.clear_env,
+      cwd = opts.workdir,
+      env = opts.env,
+   })
 
    M.startinsert()
 

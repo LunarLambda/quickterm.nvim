@@ -1,6 +1,7 @@
-# quickterm.nvim – Quick, reusable terminal buffers
+# quickterm.nvim
 
-Quickterm is a small Neovim plugin that allows you to quickly manipulate reusable terminal buffers.
+Quickterm is a small Neovim plugin that allows you to define reusable terminal buffers
+and toggle their visibility quickly. It supports on-demand evaluation of terminal options.
 
 ## Setup
 
@@ -12,25 +13,33 @@ Quickterm is a small Neovim plugin that allows you to quickly manipulate reusabl
 {
     'LunarLambda/quickterm.nvim',
     opts = {
-        -- Table of terminal names and their settings.
+        -- Table of terminal settings.
+        -- The name of each entry is used as the terminal name passed to quickterm functions.
+        -- Instead of a table each entry may be a function which returns a table, in which case
+        -- it is evaluated when a fresh instance of that terminal is needed.
         terminals = {
-            -- Settings for the default terminal. Used to fill in defaults for other terminals.
+            -- Settings for the default terminal.
+            -- Used when `open` or `toggle` is called without a name,
+            -- and used to fill in default values for other terminals.
             default = {
                 -- Position of the terminal ('left', 'right', 'top', 'bottom', 'tab')
                 position = 'bottom',
-                -- Width or height of the terminal. Ignored if position is set to 'tab'.
+                -- Width or height of the terminal.
+                -- Ignored if position is set to 'tab'.
                 -- Defaults to `min(lines / 2, 16)` for horizontal terminals,
                 -- and `min(columns / 2, 64)` for vertical terminals.
-                --
-                -- Can be a function(position), in which case it is
-                -- evaluated whenever the terminal is newly opened.
                 size = 16,
-                -- The command to execute in the terminal. Can be a string, list of strings,
-                -- or a function returning one of the former, in which case
-                -- it is evaluated whenever the terminal is newly opened.
-                --
-                -- Defaults to the current value of `{ vim.o.shell }`
+                -- The command to execute in the terminal.
+                -- Can be a string (executed with 'shell') or a list of strings.
                 command = { vim.o.shell },
+                -- The working directory of the terminal. Optional.
+                -- Defaults to the current directory of Neovim.
+                workdir = '.',
+                -- Whether to clear the environment of `command`. Optional.
+                clear_env = false,
+                -- Table of environment variables to set for the command. Optional.
+                -- Replaces existing variables if `clear_env` is `false`.
+                env = {},
             }
         }
     },

@@ -1,5 +1,13 @@
 local M = {}
 
+function M.default_terminal()
+   return {
+      position = 'bottom',
+      size = M.default_size('bottom'),
+      command = { vim.o.shell },
+   }
+end
+
 function M.default_size(pos)
    if pos == 'top' or pos == 'bottom' then
       if vim.o.lines / 2 > 16 then
@@ -16,40 +24,13 @@ function M.default_size(pos)
    end
 end
 
-function M.default_command()
-   return { vim.o.shell }
-end
-
 function M.eval_options(opts)
-   local size
-   local command
-
-   if opts.position ~= 'tab' and type(opts.size) == 'function' then
-      size = opts.size(opts.position)
-   else
-      size = opts.size
-   end
-
-   if type(opts.command) == 'function' then
-      command = opts.command()
-   else
-      command = opts.command
-   end
-
-   return {
-      position = opts.position,
-      size = size,
-      command = command,
-   }
+   return type(opts) == 'function' and opts() or opts
 end
 
 M.DEFAULT_OPTIONS = {
    terminals = {
-      default = {
-         position = 'bottom',
-         size = M.default_size,
-         command = M.default_command,
-      }
+      default = M.default_terminal,
    }
 }
 

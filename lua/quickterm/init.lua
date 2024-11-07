@@ -57,10 +57,10 @@ function M.get_options(term)
    if t then
       return t.opts
    else
-      local opts    = M.options.terminals[name] or {}
-      local default = M.options.terminals.default
+      local opts    = config.eval_options(M.options.terminals[name] or {})
+      local default = config.eval_options(M.options.terminals.default)
 
-      return config.eval_options(vim.tbl_extend('keep', opts, default))
+      return vim.tbl_extend('keep', opts, default)
    end
 end
 
