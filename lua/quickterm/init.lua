@@ -37,7 +37,7 @@ local M = {
 -- Initialize quickterm.nvim with the given `opts`.
 function M.setup(opts)
    terminal.buffers = {}
-   M.options = vim.tbl_extend('keep', opts or {}, config.DEFAULT_OPTIONS)
+   M.options = vim.tbl_deep_extend('keep', opts or {}, config.DEFAULT_OPTIONS)
 end
 
 -- Returns whether the terminal `term` exists
@@ -57,7 +57,7 @@ function M.get_options(term)
    if t then
       return t.opts
    else
-      local opts    = config.eval_options(M.options.terminals[name] or {})
+      local opts    = config.eval_options(M.options.terminals[term])
       local default = config.eval_options(M.options.terminals.default)
 
       return vim.tbl_extend('keep', opts, default)
