@@ -24,6 +24,7 @@ function M.create(name, opts)
       clear_env = opts.clear_env,
       cwd = opts.workdir,
       env = opts.env,
+      [vim.type_idx] = vim.types.dictionary,
    })
 
    M.startinsert()
